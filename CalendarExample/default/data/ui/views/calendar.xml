@@ -1,0 +1,30 @@
+<dashboard stylesheet="calendar.css" script="autodiscover.js">
+    <label>Calendar</label>
+    <row>
+        <html>
+            <h2>Users by Day</h2>
+            <div id="calSearch"
+                 class="splunk-manager"
+                 data-require="splunkjs/mvc/searchmanager"
+                 data-options='{
+                    "search": "`winevent_index` sourcetype=\"WinEventLog:Security\" EventCode=4624 Logon_Type=10 | bucket _time span=1d | stats dc(Account_Name) AS Users by _time | convert timeformat=\"%m/%d/%Y\" ctime(_time) AS date | stats count by date,Users",
+                    "cancelOnUnload": true,
+                    "preview": true
+                 }'>
+            </div>
+            
+             <div id="eventCalendar"
+                 class="splunk-view"
+                 data-require="app/CalendarExample/components/eventcalendar/eventcalendar"
+                 data-options='{
+                    "managerid": "calSearch",
+                    "valueField": "Users",
+                    "dateField": "date",
+                    "linkUrl": "/app/CalendarExample/day",
+                    "destFormField": "date"
+                 }'>
+            </div>
+             
+        </html>
+    </row>
+</dashboard>
